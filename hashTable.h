@@ -7,6 +7,8 @@
 #include "othello_cut.h"
 #endif
 
+using namespace std;
+
 struct info_t {
   int value;
   int alpha;
@@ -29,7 +31,6 @@ struct hash_function_t : public tr1::hash<state_t> {
 
 class hash_table_t : public tr1::unordered_map<state_t, stored_info_t, hash_function_t> {
 };
-
 
 stored_info_t lookup() {
   return NULL;

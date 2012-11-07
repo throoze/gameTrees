@@ -1,5 +1,6 @@
 CC = g++
 LibreriasC = arbolesJuego.cpp
+#Flags = -std=c++11
 
 all:
-	$(CC) $(LibreriasC) main.cc  -o othello
+	$(CC) $(Flags) $(LibreriasC) main.cc  -o othello

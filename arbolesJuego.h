@@ -10,7 +10,6 @@
 
  * Sartenejas 6 de noviembre de 2012
  */
-#include "hashTable.h"
 #ifndef ARBOLESJUEGO_H
 #define ARBOLESJUEGO_H
 #include <iostream>

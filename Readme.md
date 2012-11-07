@@ -9,7 +9,7 @@ Tony Lattke       07-41092
 
 Sartenejas 6 de noviembre de 2012
 
-///////////////////////////////////////Programación///////////////////////////////////////
+======================================Programación=======================================
 
 El lenguaje de programación que se uso para implementar las distintas soluciones fue c++
 debido a la necesidad de optimizar el código en tiempo y en espacio.
