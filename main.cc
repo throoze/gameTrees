@@ -17,7 +17,11 @@
 #include <iostream>
 #include <sys/time.h>
 
+#ifndef OTHELLO
+#define OTHELLO
 #include "othello_cut.h"
+#endif
+
 #include "arbolesJuego.h"
 
 using namespace std;

@@ -14,6 +14,7 @@
 
 #include "arbolesJuego.h"
 static unsigned long long int Nnodes;
+hash_table_t trans;
 
 /* Devuelve el numero de nodos expandidos
  * return: el numero de nodos expandidos
@@ -61,10 +62,11 @@ int arbolesJuego::print(state_t n, bool color, int depth){
 int arbolesJuego::minimax_run(state_t n, bool color){
     Nnodes = 0;
     int res;
-    if(color)
-        res = ValorMax(n);
-    else
-        res = ValorMin(n);
+    if(color) {
+    res = ValorMax(n);
+    } else {
+      res = ValorMin(n);
+    }
 
     return res;
 
@@ -82,22 +84,44 @@ int arbolesJuego::ValorMax(state_t n){
     int alpha = INT_MIN;
     list<int> sucesores = n.succ(true);
     int aux;
-    stored_info_t info;
-    info_t b;
 
     if (sucesores.size() == 0) {
         alpha = ValorMin(n);
-        b.value = alpha;
-        info.black = b;
-        trans.insert(make_pair(n,info));
+        hash_table_t::iterator it = trans.find(n);
+        if ( it == trans.end() ) {
+          stored_info_t info;
+          info_t b;
+          b.value = alpha;
+          info.black = b;
+          trans.insert(make_pair(n,info));
+        } else {
+          stored_info_t siaux = trans[n];
+          siaux.black.value = MAX(siaux.black.value, alpha);
+          trans[n] = siaux;
+        }
     }
 
     while (sucesores.size() > 0) {
         aux = sucesores.front();
         sucesores.pop_front();
-        int tmp = ValorMin(n.move(true,aux));
-        alpha = MAX(alpha, tmp);
-
+        state_t newst = n.move(true,aux);
+        hash_table_t::iterator it = trans.find(newst);
+        if ( it == trans.end() ) {
+          int tmp = ValorMin(newst);
+          alpha = MAX(alpha, tmp);
+          stored_info_t info;
+          info_t b;
+          b.value = alpha;
+          info.black = b;
+          trans.insert(make_pair(newst,info));
+          return alpha;
+        } else {
+          stored_info_t siaux = trans[newst];
+          int vaux = siaux.black.value;
+          siaux.black.value = MAX(vaux, alpha);
+          trans[newst] = siaux;
+          return siaux.black.value;
+        }
     }
     return alpha;
 }
@@ -115,14 +139,43 @@ int arbolesJuego::ValorMin(state_t n){
     list<int> sucesores = n.succ(false);
     int aux;
 
-    if (sucesores.size() == 0)
-        beta = ValorMax(n);
+    if (sucesores.size() == 0) {
+          beta = ValorMax(n);
+        hash_table_t::iterator it = trans.find(n);
+        if ( it == trans.end() ) {
+          stored_info_t info;
+          info_t w;
+          w.value = beta;
+          info.white = w;
+          trans.insert(make_pair(n,info));
+        } else {
+          stored_info_t siaux = trans[n];
+          siaux.white.value = MIN(siaux.white.value, beta);
+          trans[n] = siaux;
+        }
+    }
 
     while (sucesores.size() > 0) {
-        aux = sucesores.front();
-        sucesores.pop_front();
-        int tmp = ValorMax(n.move(false,aux));
+      aux = sucesores.front();
+      sucesores.pop_front();
+      state_t newst = n.move(false,aux);
+      hash_table_t::iterator it = trans.find(newst);
+      if ( it == trans.end() ) {
+        int tmp = ValorMax(newst);
         beta = MIN(beta, tmp);
+        stored_info_t info;
+        info_t w;
+        w.value = beta;
+        info.white = w;
+        trans.insert(make_pair(newst,info));
+        return beta;
+      } else {
+        stored_info_t siaux = trans[newst];
+        int vaux = siaux.white.value;
+        siaux.white.value = MIN(vaux, beta);
+        trans[newst] = siaux;
+        return siaux.white.value;
+      }
     }
     return beta;
 }

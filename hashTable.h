@@ -1,6 +1,7 @@
 #ifndef HASH_TABLE
 #define HASH_TABLE
 #include <tr1/unordered_map>
+#include <limits>
 
 #ifndef OTHELLO
 #define OTHELLO
@@ -13,7 +14,11 @@ struct info_t {
   int value;
   int alpha;
   int betha;
-  info_t(){}
+  info_t(){
+    value = INT_MIN;
+    alpha = INT_MIN;
+    betha = INT_MAX;
+  }
 };
 
 struct stored_info_t {
@@ -32,10 +37,6 @@ struct hash_function_t : public tr1::hash<state_t> {
 class hash_table_t : public tr1::unordered_map<state_t, stored_info_t, hash_function_t> {
 };
 
-stored_info_t lookup() {
-  return NULL;
-}
-
-hash_table_t trans;
+extern hash_table_t trans;
 
 #endif
